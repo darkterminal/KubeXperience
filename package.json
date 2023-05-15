@@ -20,10 +20,13 @@
     "@ducanh2912/next-pwa": "^8.2.0",
     "@react-three/drei": "^9.65.3",
     "@react-three/fiber": "^8.12.0",
+    "clsx": "^1.2.1",
     "glsl-random": "^0.0.5",
+    "lucide-react": "^0.216.0",
     "next": "^13.4.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "tailwind-merge": "^1.12.0",
     "three": "^0.151.3",
     "three-stdlib": "^2.21.8",
     "tunnel-rat": "^0.1.2"
