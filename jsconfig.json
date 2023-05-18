@@ -5,8 +5,10 @@
       "@/*": [
         "app/*",
         "src/*",
-        "config/*",
-        "libs/*"
+        "lib/*"
+      ],
+      "@/config/*": [
+        "config/*"
       ],
     }
   }
