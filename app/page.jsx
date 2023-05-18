@@ -1,11 +1,15 @@
 'use client'
 
-import dynamic from 'next/dynamic'
-import { Suspense } from 'react'
 
-const Logo = dynamic(() => import('@/components/canvas/Examples').then((mod) => mod.Logo), { ssr: false })
-const Dog = dynamic(() => import('@/components/canvas/Examples').then((mod) => mod.Dog), { ssr: false })
-const Duck = dynamic(() => import('@/components/canvas/Examples').then((mod) => mod.Duck), { ssr: false })
+import { GummyCubesAnimation, } from '@/components/canvas/xperience/GlassKube'
+import { siteConfig } from '@/config/site'
+import dynamic from 'next/dynamic'
+import Link from 'next/link'
+import { Suspense, useRef } from 'react'
+import { buttonVariants } from "@/components/ui/button"
+import { OrbitControls, Environment, Plane, Shadow } from '@react-three/drei';
+import { motion } from "framer-motion";
+
 const View = dynamic(() => import('@/components/canvas/View').then((mod) => mod.View), {
   ssr: false,
   loading: () => (
@@ -24,59 +28,109 @@ const View = dynamic(() => import('@/components/canvas/View').then((mod) => mod.
 const Common = dynamic(() => import('@/components/canvas/View').then((mod) => mod.Common), { ssr: false })
 
 export default function Page() {
+  const viewRef = useRef(null);
+
   return (
     <>
-      <div className='mx-auto flex w-full flex-col flex-wrap items-center md:flex-row  lg:w-4/5'>
+      <div className='mx-auto h-full flex flex-1 w-full flex-col flex-wrap items-center md:flex-row container justify-center'>
+
         {/* jumbo */}
-        <div className='flex w-full flex-col items-start justify-center p-12 text-center md:w-2/5 md:text-left'>
-          <p className='w-full uppercase'>Next + React Three Fiber</p>
-          <h1 className='my-4 text-5xl font-bold leading-tight'>Next 3D Starter</h1>
-          <p className='mb-8 text-2xl leading-normal'>A minimalist starter for React, React-three-fiber and Threejs.</p>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className='flex w-full flex-col items-start justify-center py-12 text-center md:w-2/5 md:text-left'
+        >
+          <motion.p
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.9 }}
+            className='w-full uppercase'
+          >
+            Next + React Three Fiber + Le Kube
+          </motion.p>
+          <motion.h1
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className='w-full my-4 text-4xl font-bold leading-tight'
+          >
+            KubeXperience
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className='mb-8 text-2xl leading-normal'
+          >
+            Embark on my Three.js learning journey and explore Generative Arts and Code. Join me in this digital space where I share my experiences.
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+            className="flex gap-4"
+          >
+            <Link href={siteConfig.links.xperiment}>
+              <motion.span
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 1 }}
+                className={buttonVariants({ size: "lg" })}
+              >
+                See Xperiments 🧪
+              </motion.span>
+            </Link>
+            <Link href={siteConfig.links.github}>
+              <motion.span
+                target="_blank"
+                rel="noreferrer"
+                href={siteConfig.links.github}
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 1 }}
+                className={buttonVariants({ variant: "outline", size: "lg" })}
+              >
+                GitHub
+              </motion.span>
+            </Link>
+          </motion.div>
+        </motion.div>
 
+
+        {/* canvas */}
         <div className='w-full text-center md:w-3/5'>
-          <View className='flex h-96 w-full flex-col items-center justify-center'>
+          <View ref={viewRef} className='flex h-[600px] w-full flex-col items-center justify-center'>
             <Suspense fallback={null}>
-              <Logo route='/blob' scale={0.6} position={[0, 0, 0]} />
+              <ambientLight intensity={0.3} />
+              <pointLight intensity={1} position={[5, 5, 5]} />
+              <GummyCubesAnimation />
               <Common />
+
+              {/* // This look like to add some fancy rainbox effect! 🌈 */}
+              <Environment preset="lobby" />
+
+              {/* I should play with camera position instead of zoom to get a better effect and remove the stretching effect.. */}
+              <OrbitControls minDistance={11} maxDistance={11} />
+              <Shadow
+                position={[0, -2, 0]}
+                rotation={[-Math.PI / 2, 0, 0]}
+                scale={[4, 4, 4]}
+                opacity={0.3}
+                blur={1}
+              />
+              <Plane receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, 0]}>
+                <shadowMaterial attach="material" transparent opacity={0.3} />
+              </Plane>
             </Suspense>
           </View>
+
+          {/* // ? Work in progress */}
+          {/* <button onClick={() => captureScreenshot(viewRef)}>Capture Screenshot</button> */}
+
         </div>
       </div>
 
-      <div className='mx-auto flex w-full flex-col flex-wrap items-center p-12 md:flex-row  lg:w-4/5'>
-        {/* first row */}
-        <div className='relative h-48 w-full py-6 sm:w-1/2 md:my-12 md:mb-40'>
-          <h2 className='mb-3 text-3xl font-bold leading-none text-gray-800'>Events are propagated</h2>
-          <p className='mb-8 text-gray-600'>Drag, scroll, pinch, and rotate the canvas to explore the 3D scene.</p>
-        </div>
-        <div className='relative my-12 h-48 w-full py-6 sm:w-1/2 md:mb-40'>
-          <View orbit className='relative h-full  sm:h-48 sm:w-full'>
-            <Suspense fallback={null}>
-              <Dog scale={2} position={[0, -1.6, 0]} rotation={[0.0, -0.3, 0]} />
-              <Common color={'lightpink'} />
-            </Suspense>
-          </View>
-        </div>
-        {/* second row */}
-        <div className='relative my-12 h-48 w-full py-6 sm:w-1/2 md:mb-40'>
-          <View orbit className='relative h-full animate-bounce sm:h-48 sm:w-full'>
-            <Suspense fallback={null}>
-              <Duck route='/blob' scale={2} position={[0, -1.6, 0]} />
-              <Common color={'lightblue'} />
-            </Suspense>
-          </View>
-        </div>
-        <div className='w-full p-6 sm:w-1/2'>
-          <h2 className='mb-3 text-3xl font-bold leading-none text-gray-800'>Dom and 3D are synchronized</h2>
-          <p className='mb-8 text-gray-600'>
-            3D Divs are renderer through the View component. It uses gl.scissor to cut the viewport into segments. You
-            tie a view to a tracking div which then controls the position and bounds of the viewport. This allows you to
-            have multiple views with a single, performant canvas. These views will follow their tracking elements,
-            scroll along, resize, etc.
-          </p>
-        </div>
-      </div>
     </>
   )
 }
